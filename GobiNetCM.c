@@ -87,7 +87,7 @@ static int GobiNetGetClientID(const char *qcqmi, uchar QMIType) {
     return ClientId;
 }
 
-int GobiNetDeInit(void) {
+static int GobiNetDeInit(void) {
     unsigned int i;
     for (i = 0; i < sizeof(qmiclientId)/sizeof(qmiclientId[0]); i++) {
         if (qmiclientId[i] != 0) {

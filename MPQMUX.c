@@ -6,8 +6,6 @@ static pthread_mutex_t dumpQMIMutex = PTHREAD_MUTEX_INITIALIZER;
 #undef dbg
 #define dbg( format, arg... ) do {if (strlen(line) < sizeof(line)) snprintf(&line[strlen(line)], sizeof(line) - strlen(line), format, ## arg);} while (0)
 
-PQMI_TLV_HDR GetTLV (PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType);
-
 typedef struct {
     uint type;
     const char *name;
@@ -295,7 +293,7 @@ static const char * qmi_name_get(const QMI_NAME_T *table, size_t size, int type,
 #define QMI_NAME(table, type) qmi_name_get(table, sizeof(table) / sizeof(table[0]), type, 0)
 #define QMUX_NAME(table, type, tag) qmi_name_get(table, sizeof(table) / sizeof(table[0]), type, tag)
 
-void dump_tlv(PQCQMUX_MSG_HDR pQMUXMsgHdr) {
+static void dump_tlv(PQCQMUX_MSG_HDR pQMUXMsgHdr) {
     int TLVFind = 0;
     int i;
     //dbg("QCQMUX_TLV-----------------------------------\n");
@@ -317,7 +315,7 @@ void dump_tlv(PQCQMUX_MSG_HDR pQMUXMsgHdr) {
     }  // while
 }
 
-void dump_ctl(PQCQMICTL_MSG_HDR CTLHdr) {
+static void dump_ctl(PQCQMICTL_MSG_HDR CTLHdr) {
     const char *tag;
 
     //dbg("QCQMICTL_MSG--------------------------------------------\n");
@@ -344,7 +342,7 @@ void dump_ctl(PQCQMICTL_MSG_HDR CTLHdr) {
     dump_tlv((PQCQMUX_MSG_HDR)(&CTLHdr->QMICTLType));
 }
 
-int dump_qmux(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr) {
+static int dump_qmux(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr) {
     PQCQMUX_MSG_HDR QMUXMsgHdr = (PQCQMUX_MSG_HDR) (QMUXHdr + 1);
     char *tag;
 

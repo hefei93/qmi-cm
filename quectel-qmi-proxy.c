@@ -484,7 +484,7 @@ static void cleanup_qmi_connection(int clientfd) {
                 log_info("xxx ClientFd=%d QMIType=%d ClientId=%d\n", qmi_con->ClientFd, qmi_client->QMIType, qmi_client->ClientId);
 
                 qlist_remove(&qmi_client->qnode);
-                free(qmi_client);
+                qfree((void**)&qmi_client);
             }
 
             qlist_for_each(qmi_node, &qmi_proxy_ctl_msg) {
@@ -492,7 +492,7 @@ static void cleanup_qmi_connection(int clientfd) {
 
                 if (qmi_msg->ClientFd == qmi_con->ClientFd) {
                     qlist_remove(&qmi_msg->qnode);
-                    free(qmi_msg);
+                    qfree((void**)&qmi_msg);
                     break;
                 }
             }
@@ -500,7 +500,7 @@ static void cleanup_qmi_connection(int clientfd) {
             log_info("--- ClientFd=%d\n", qmi_con->ClientFd);
             close(qmi_con->ClientFd);
             qlist_remove(&qmi_con->qnode);
-            free(qmi_con);
+            qfree((void**)&qmi_con);
             break;
         }
     }
@@ -530,7 +530,7 @@ static void release_client_id(QMI_PROXY_CONNECTION *qmi_con, PQMICTL_RELEASE_CLI
             if (pClient->QMIType == qmi_client->QMIType && pClient->ClientId == qmi_client->ClientId) {
                 log_info("--- ClientFd=%d QMIType=%d ClientId=%d\n", qmi_con->ClientFd, qmi_client->QMIType, qmi_client->ClientId);
                 qlist_remove(&qmi_client->qnode);
-                free(qmi_client);
+                qfree((void**)&qmi_client);
                 break;
             }
         }
@@ -627,7 +627,7 @@ static void recv_qmi(PQCQMIMSG pQMI, unsigned size) {
                 }
 
                 qlist_remove(&qmi_msg->qnode);
-                free(qmi_msg);
+                qfree((void**)&qmi_msg);
             }
         }
 
@@ -694,7 +694,7 @@ static int send_qmi_timeout(PQCQMIMSG pRequest, PQCQMIMSG *ppResponse, unsigned 
         if (s_pCtlRsq && ppResponse) {
             *ppResponse = s_pCtlRsq;
         } else if (s_pCtlRsq) {
-            free(s_pCtlRsq);
+            qfree((void**)&s_pCtlRsq);
         }
     } else {
         log_info("pthread_cond_timeout_np timeout ret=%d", ret);
@@ -706,7 +706,7 @@ static int send_qmi_timeout(PQCQMIMSG pRequest, PQCQMIMSG *ppResponse, unsigned 
     return ret;
 }
 
-PQCQMUX_TLV qmi_find_tlv (PQCQMIMSG pQMI, uint8_t TLVType) {
+static PQCQMUX_TLV qmi_find_tlv (PQCQMIMSG pQMI, uint8_t TLVType) {
     int Length = 0;
 
     while (Length < le16_to_cpu(pQMI->MUXMsg.QMUXMsgHdr.Length)) {
@@ -784,7 +784,7 @@ static int qmi_proxy_init(void) {
                      pRsp->CTLMsg.GetVersionRsp.TypeVersion[NumElements].MinorVersion);
         }
     }
-    free(pRsp);
+    qfree((void**)&pRsp);
 
     pQMI->CTLMsg.GetClientIdReq.TransactionId = TransactionId++;
     pQMI->CTLMsg.GetClientIdReq.QMICTLType = QMICTL_GET_CLIENT_ID_REQ;
@@ -807,7 +807,7 @@ static int qmi_proxy_init(void) {
         WDAClientId = pRsp->CTLMsg.GetClientIdRsp.ClientId;
         log_info("WDAClientId = %d\n", WDAClientId);
     }
-    free(pRsp);
+    qfree((void**)&pRsp);
 
     rx_urb_size = 16 * 1024; //must same as rx_urb_size defined in GobiNet&qmi_wwan driver
     ep_type = 0x02;
@@ -889,7 +889,7 @@ static int qmi_proxy_init(void) {
         if (pFormat)
             log_info("ul_data_aggregation_max_size %d\n", pFormat->Value);
     }
-    free(pRsp);
+    qfree((void**)&pRsp);
 
     qmi_proxy_server_fd = create_local_server("quectel-qmi-proxy");
     printf("%s: qmi_proxy_server_fd = %d\n", __func__, qmi_proxy_server_fd);
@@ -1051,31 +1051,31 @@ static bool is_quectel_device(const char *path) {
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idProduct", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &pid) == false) {
-        qfree(pid);
+        qfree((void**)&pid);
         return false;
     }
 
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idVendor", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &vid) == false) {
-        qfree(pid);
-        qfree(vid);
+        qfree((void**)&pid);
+        qfree((void**)&vid);
         return false;
     }
 
     if (str_is_digit(vid, 0x2c7c, 16)) {
         log_info("Find quectel device (%s:%s) in %s", vid, pid, path);
-        qfree(vid);
-        qfree(pid);
+        qfree((void**)&vid);
+        qfree((void**)&pid);
         return true;
     }
 
-    qfree(vid);
-    qfree(pid);
+    qfree((void**)&vid);
+    qfree((void**)&pid);
     return false;
 }
 
-static bool qmi_detect_device(char **iface, char **dev) {
+static bool qmi_detect_device(char **dev) {
     const char *dir = NULL;
     char usbdir[255] = {0};
     char subdir[255] = {0};
@@ -1113,36 +1113,12 @@ static bool qmi_detect_device(char **iface, char **dev) {
                 psubDir = opendir(subdir);
                 while ((subent = readdir(psubDir)) != NULL) {
                     if (str_has_prefix(subent->d_name, usbent->d_name) == false) continue;
-                    /* wwan0 */
-                    (void)snprintf(buf, sizeof(buf), "%s/%s", subdir, subent->d_name);
-                    if (dir_has_child(buf, "net")) {
-                        snprintf(tmp, ARRAY_SIZE(tmp), "%s/net", buf);
-                        dir_get_child(tmp, iface);
-                        log_info("Find interface %s/%s", buf, *iface);
-                    }
-
                     // qmi_wwan
                     if (dir_has_child(buf, "usbmisc")) {
                         snprintf(tmp, ARRAY_SIZE(tmp), "%s/usbmisc", buf);
                         dir_get_child(tmp, dev);
                         log_info("Find device %s/%s", buf, *dev);
                         log_info("Will use driver qmi_wwan");
-                    }
-
-                    // gobinet
-                    if (dir_has_child(buf, "GobiQMI")) {
-                        snprintf(tmp, ARRAY_SIZE(tmp), "%s/GobiQMI", buf);
-                        dir_get_child(tmp, dev);
-                        log_info("Find device %s/%s", buf, *dev);
-                        log_info("Will use driver GobiNet");
-                    }
-
-                    // mhi
-                    if (dir_has_child(buf, "usb")) {
-                        snprintf(tmp, ARRAY_SIZE(tmp), "%s/usb", buf);
-                        dir_get_child(tmp, dev);
-                        log_info("Find device %s/%s", buf, *dev);
-                        log_info("Will use driver MHI");
                     }
                 }
             }
@@ -1151,7 +1127,7 @@ static bool qmi_detect_device(char **iface, char **dev) {
     }
     closedir(pDir);
 
-    if (!*iface || !*dev) {
+    if (*dev == NULL) {
         log_error("1. does your device support QMI?");
         log_error("2. does your device is configured correctly to use QMI driver?");
         log_error("3. what is the response of AT command 'at+qcfg=\"usbnet\"' ?");
@@ -1163,7 +1139,7 @@ static bool qmi_detect_device(char **iface, char **dev) {
 
 int main(int argc, char *argv[]) {
     int opt;
-    const char *cdc_wdm = "/dev/cdc-wdm0";
+    char *cdc_wdm = NULL;
     pthread_t thread_id;
     int seconds = 0;
 
@@ -1182,12 +1158,14 @@ int main(int argc, char *argv[]) {
     }
 
     while(1) {
+        if (cdc_wdm == NULL) qmi_detect_device(&cdc_wdm);
         if (access(cdc_wdm, F_OK)) {
             log_info("%s is not exists, have waiting %ds\n", cdc_wdm, seconds);
             sleep(2);
             seconds += 2;
             continue;
         }
+        log_info("Will use %s \n", cdc_wdm);
 
         cdc_wdm_fd = open(cdc_wdm, O_RDWR | O_NONBLOCK | O_NOCTTY);
         if (cdc_wdm_fd == -1) {

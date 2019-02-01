@@ -132,7 +132,7 @@ int epoll_deregister(int  epoll_fd, int  fd);
 typedef int bool;
 // memory
 void *malloc0(int size);
-void qfree(void *p);
+void qfree(void **p);
 
 // string
 bool str_has_prefix(const char *s1, const char *s2);
@@ -143,6 +143,7 @@ char *str_get_val_with_key(const char *str, const char *key);
 void str_trim(char **str);
 void str_ltrim(char **str);
 void str_rtrim(char **str);
+void str_char_replace(char **str, char c1, char c2);
 
 // directory
 bool dir_has_child(const char *dir, const char *fname);
@@ -156,22 +157,24 @@ int dir_list(const char *dir, int (*match)(const char *dir, const char *file, vo
 const char * get_time(void);
 int ql_system(const char *shell_cmd);
 
+int progress_bar(int numerator, int denominator, int style);
+
 /* global variable */
 extern bool verbose;
 extern bool debug;
 
 /* stream related */
 #if defined(DEBUG)
-#define log_print(fmt, arg...) do{ dprintf(0, "[%s:%s:%04d:%s] "fmt"\r\n", get_time(), __FILE__, __LINE__, __FUNCTION__, ##arg); }while(0);
+#define log_print(fmt, arg...) do{ dprintf(0, "[%s %s:%04d] "fmt"\r\n", get_time(), __FILE__, __LINE__, ##arg); }while(0);
 #else
 #define log_print(fmt, arg...) do{ dprintf(0, "[%s] "fmt"\r\n", get_time(), ##arg); }while(0);
 #endif
-#define log_debug(fmt, arg...)      {if(debug) log_print("\033[47;30m""Warn: "fmt"\033[0m", ##arg)}
+#define log_debug(fmt, arg...)      {if(debug) log_print("\033[47;30m""Debug: "fmt"\033[0m", ##arg);}
 #define log_warn(fmt, arg...)       {log_print("\033[40;33m""Warn: "fmt"\033[0m", ##arg)}
 #define log_error(fmt, arg...)      {log_print("\033[40;31m""Error: "fmt"\033[0m", ##arg)}
 #define log_fatal(fmt, arg...)      {log_print("\033[41;37m""Fatal: "fmt"\033[0m", ##arg); exit(1);}
 #define log_info(fmt, arg...)       {log_print("\033[40;37m"fmt"\033[0m", ##arg)}
-#define log_verbose(fmt, arg...)    {if(verbose) log_print("\033[40;37m""Warn: "fmt"\033[0m", ##arg)}
+#define log_verbose(fmt, arg...)    {if(verbose) log_print("\033[40;37m"fmt"\033[0m", ##arg);}
 
 #define copy_bit(u1, u2) {(u1) = (u2);}
 #define test_bit(u32, n) {(u32) & 1<<n;}
@@ -181,7 +184,6 @@ extern bool debug;
 
 #define ipv6(u32) (u32 & 1 << IpFamilyV6)
 #define ipv4(u32) (u32 & 1 << IpFamilyV4)
-#define ipv4v6(u32) (ipv4(u32) && ipv6(u32))
 
 /* macros */
 #define MAX_PATH 256
@@ -191,5 +193,16 @@ extern bool debug;
 #define return_if_fail(cond) {if (!(cond)) return;}
 #define return_val_if_fail(cond, val) {if (!(cond)) return (val);}
 #define log_return_val_if_fail(cond, val, msg) {if (!(cond)) {log_info(msg); return (val);}}
+#define val_name(v) (#v)
+
+// progress bar
+#define O_BAR 1<<0
+// percentage
+#define O_PERCENT 1<<1
+// dynamic lable
+#define O_LABLE 1<<2
+// loading bar, embeded style
+#define O_LOAD  1<<3
+
 
 #endif /* _UTILS_H_ */

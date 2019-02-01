@@ -15,7 +15,7 @@ ANSI_COLOR_RED	qserial/include/tio/print.h	26;"	d
 ANSI_COLOR_RESET	qserial/include/tio/print.h	33;"	d
 ANSI_COLOR_WHITE	qserial/include/tio/print.h	32;"	d
 ANSI_COLOR_YELLOW	qserial/include/tio/print.h	28;"	d
-ARRAY_SIZE	util.h	185;"	d
+ARRAY_SIZE	util.h	192;"	d
 ATTACHED	main.c	22;"	d	file:
 AUTOCONF_BAUDRATE_CASES	qserial/include/config.h	5;"	d
 AccessTime	quectel-qmi-proxy.c	/^    unsigned AccessTime;$/;"	m	struct:__anon11	file:	access:public
@@ -185,15 +185,15 @@ GetRuntimeSettingsReq	MPQMUX.h	/^        QMIWDS_GET_RUNTIME_SETTINGS_REQ_MSG    
 GetRuntimeSettingsRsp	MPQMUX.h	/^        QMIWDS_GET_RUNTIME_SETTINGS_RESP_MSG      GetRuntimeSettingsRsp;$/;"	m	union:_QMUX_MSG::__anon3	access:public
 GetServingSystemResp	MPQMUX.h	/^        QMINAS_GET_SERVING_SYSTEM_RESP_MSG        GetServingSystemResp;$/;"	m	union:_QMUX_MSG::__anon3	access:public
 GetSysInfoResp	MPQMUX.h	/^        QMINAS_GET_SYS_INFO_RESP_MSG              GetSysInfoResp;$/;"	m	union:_QMUX_MSG::__anon3	access:public
-GetTLV	MPQMUX.c	/^PQMI_TLV_HDR GetTLV (PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType);$/;"	p	file:	signature:(PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType)
 GetTLV	QMIThread.c	/^PQMI_TLV_HDR GetTLV (PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType) {$/;"	f	signature:(PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType)
+GetTLV	QMIThread.h	/^extern PQMI_TLV_HDR GetTLV (PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType);$/;"	p	signature:(PQCQMUX_MSG_HDR pQMUXMsgHdr, int TLVType)
 GetVersionReq	MPQCTL.h	/^        QMICTL_GET_VERSION_REQ_MSG                   GetVersionReq;$/;"	m	union:_QMICTL_MSG::__anon1	access:public
 GetVersionReq	quectel-qmi-proxy.c	/^        QMICTL_GET_VERSION_REQ_MSG                   GetVersionReq;$/;"	m	union:_QMICTL_MSG::__anon7	file:	access:public
 GetVersionRsp	MPQCTL.h	/^        QMICTL_GET_VERSION_RESP_MSG                  GetVersionRsp;$/;"	m	union:_QMICTL_MSG::__anon1	access:public
 GetVersionRsp	quectel-qmi-proxy.c	/^        QMICTL_GET_VERSION_RESP_MSG                  GetVersionRsp;$/;"	m	union:_QMICTL_MSG::__anon7	file:	access:public
 GobiInit	GobiNetCM.c	/^int GobiInit(PROFILE_T *profile) {$/;"	f	signature:(PROFILE_T *profile)
 GobiInit	QMIThread.h	/^extern int GobiInit(PROFILE_T *profile);$/;"	p	signature:(PROFILE_T *profile)
-GobiNetDeInit	GobiNetCM.c	/^int GobiNetDeInit(void) {$/;"	f	signature:(void)
+GobiNetDeInit	GobiNetCM.c	/^static int GobiNetDeInit(void) {$/;"	f	file:	signature:(void)
 GobiNetGetClientID	GobiNetCM.c	/^static int GobiNetGetClientID(const char *qcqmi, uchar QMIType) {$/;"	f	file:	signature:(const char *qcqmi, uchar QMIType)
 GobiNetSendQMI	GobiNetCM.c	/^int GobiNetSendQMI(PQCQMIMSG pRequest) {$/;"	f	signature:(PQCQMIMSG pRequest)
 GobiNetSendQMI	QMIThread.h	/^extern int GobiNetSendQMI(PQCQMIMSG pRequest);$/;"	p	signature:(PQCQMIMSG pRequest)
@@ -366,7 +366,7 @@ Length	quectel-qmi-proxy.c	/^    uint16_t Length;$/;"	m	struct:_QMIWDS_ADMIN_SET
 Length	quectel-qmi-proxy.c	/^    uint16_t Length;$/;"	m	struct:_QMIWDS_ADMIN_SET_DATA_FORMAT_REQ_MSG	file:	access:public
 LinkProt	MPQCTL.h	/^    ushort LinkProt;        \/\/ 0x1: ETH; 0x2: IP$/;"	m	struct:_QMICTL_SET_DATA_FORMAT_TLV_LINK_PROT	access:public
 MAJOR	main.c	17;"	d	file:
-MAX_PATH	util.h	182;"	d
+MAX_PATH	util.h	189;"	d
 MCC	MPQMUX.h	/^    uchar  MCC[3];$/;"	m	struct:_CDMA_SYSTEM_INFO	access:public
 MCC	MPQMUX.h	/^    uchar  MCC[3];$/;"	m	struct:_GSM_SYSTEM_INFO	access:public
 MCC	MPQMUX.h	/^    uchar  MCC[3];$/;"	m	struct:_LTE_SYSTEM_INFO	access:public
@@ -433,6 +433,10 @@ NumElements	MPQCTL.h	/^    uchar  NumElements;     \/\/ Num of QMUX_TYPE_VERSION
 NumElements	quectel-qmi-proxy.c	/^    uint8_t  NumElements;     \/\/ Num of QMUX_TYPE_VERSION_STRUCT$/;"	m	struct:_QMICTL_GET_VERSION_RESP_MSG	file:	access:public
 NumSlot	MPQMUX.h	/^    uchar  NumSlot;$/;"	m	struct:_QMIUIM_CARD_STATUS	access:public
 OPTIONS_H	qserial/include/tio/options.h	23;"	d
+O_BAR	util.h	199;"	d
+O_LABLE	util.h	203;"	d
+O_LOAD	util.h	205;"	d
+O_PERCENT	util.h	201;"	d
 Offset	MPQMUX.h	/^    ushort Offset;$/;"	m	struct:_READ_TRANSPARENT_TLV	access:public
 OperatingMode	MPQMUX.h	/^    uchar  OperatingMode;$/;"	m	struct:_QMIDMS_SET_OPERATING_MODE_REQ_MSG	access:public
 PACKAGE	qserial/include/config.h	11;"	d
@@ -1102,7 +1106,7 @@ QMI_ERR_PIN_PERM_BLOCKED	MPQMI.h	/^    QMI_ERR_PIN_PERM_BLOCKED     = 0x0024,$/;
 QMI_ERR_STORAGE_EXCEEDED	MPQMI.h	/^    QMI_ERR_STORAGE_EXCEEDED     = 0x000B,$/;"	e	enum:_QMI_ERROR_CODE_TYPE
 QMI_ERR_intERNAL	MPQMI.h	/^    QMI_ERR_intERNAL             = 0x0003,$/;"	e	enum:_QMI_ERROR_CODE_TYPE
 QMI_ID	MPQCTL.h	/^    ushort QMI_ID;          \/\/ Upper byte is assigned by MSM,$/;"	m	struct:_QMICTL_SET_INSTANCE_ID_RESP_MSG	access:public
-QMI_NAME	MPQMUX.c	295;"	d	file:
+QMI_NAME	MPQMUX.c	293;"	d	file:
 QMI_NAME_T	MPQMUX.c	/^} QMI_NAME_T;$/;"	t	typeref:struct:__anon2	file:
 QMI_PIN_STATUS_BLOCKED	MPQMUX.h	1172;"	d
 QMI_PIN_STATUS_CHANGED	MPQMUX.h	1175;"	d
@@ -1192,7 +1196,7 @@ QMUX_CTL_FLAG_TYPE_RSP	quectel-qmi-proxy.c	292;"	d	file:
 QMUX_MSG	MPQMUX.h	/^} __attribute__ ((packed)) QMUX_MSG, *PQMUX_MSG;$/;"	t	typeref:struct:_QMUX_MSG
 QMUX_MSG	quectel-qmi-proxy.c	/^} __attribute__ ((packed)) QMUX_MSG, *PQMUX_MSG;$/;"	t	typeref:struct:_QMUX_MSG	file:
 QMUX_MSG_OVERHEAD_BYTES	MPQMI.h	134;"	d
-QMUX_NAME	MPQMUX.c	296;"	d	file:
+QMUX_NAME	MPQMUX.c	294;"	d	file:
 QMUX_TYPE_ALL	MPQMI.h	/^    QMUX_TYPE_ALL  = 0xFF$/;"	e	enum:_QMI_SERVICE_TYPE
 QMUX_TYPE_ALL	quectel-qmi-proxy.c	/^    QMUX_TYPE_ALL  = 0xFF$/;"	e	enum:_QMI_SERVICE_TYPE	file:
 QMUX_TYPE_CTL	MPQMI.h	/^    QMUX_TYPE_CTL  = 0x00,$/;"	e	enum:_QMI_SERVICE_TYPE
@@ -1223,7 +1227,7 @@ QOSSetting	MPQMUX.h	/^    uchar  QOSSetting;$/;"	m	struct:_QMIWDS_ADMIN_SET_DATA
 QOSSetting	quectel-qmi-proxy.c	/^    uint8_t  QOSSetting;$/;"	m	struct:_QMIWDS_ADMIN_SET_DATA_FORMAT_TLV_QOS	file:	access:public
 QUECTEL_PACKET_TRANSFER_END_IND	MPQMUX.h	2064;"	d
 QUECTEL_PACKET_TRANSFER_START_IND	MPQMUX.h	2063;"	d
-QUECTEL_QMI_PROXY	QMIThread.h	145;"	d
+QUECTEL_QMI_PROXY	QMIThread.h	144;"	d
 QWDS_PKT_DATA_AUTHENTICATING	MPQMUX.h	79;"	d
 QWDS_PKT_DATA_CONNECTED	MPQMUX.h	77;"	d
 QWDS_PKT_DATA_DISCONNECTED	MPQMUX.h	76;"	d
@@ -1313,8 +1317,8 @@ SIM_PIN	QMIThread.h	/^    SIM_PIN = 3,$/;"	e	enum:__anon6
 SIM_PUK	QMIThread.h	/^    SIM_PUK = 4,$/;"	e	enum:__anon6
 SIM_READY	QMIThread.h	/^    SIM_READY = 2, \/* SIM_READY means the radio state is RADIO_STATE_SIM_READY *\/$/;"	e	enum:__anon6
 SIM_Status	QMIThread.h	/^} SIM_Status;$/;"	t	typeref:enum:__anon6
-SOCKPAIR_DIAL	QMIThread.h	136;"	d
-SOCKPAIR_QMI	QMIThread.h	137;"	d
+SOCKPAIR_DIAL	QMIThread.h	135;"	d
+SOCKPAIR_QMI	QMIThread.h	136;"	d
 STAT_DISCONNECT	util.h	/^    STAT_DISCONNECT,$/;"	e	enum:__anon14
 STAT_IPINVALID	util.h	/^    STAT_IPINVALID,$/;"	e	enum:__anon14
 STAT_OK	util.h	/^    STAT_OK,$/;"	e	enum:__anon14
@@ -2893,20 +2897,20 @@ bool	util.h	/^typedef int bool;$/;"	t
 cdc_wdm_fd	QmiWwanCM.c	/^int cdc_wdm_fd = -1;$/;"	v
 cdc_wdm_fd	quectel-qmi-proxy.c	/^static int cdc_wdm_fd = -1;$/;"	v	file:
 cfmakenoblock	quectel-qmi-proxy.c	29;"	d	file:
-check_ipv4_address	main.c	/^static int check_ipv4_address(PROFILE_T *now_profile) {$/;"	f	file:	signature:(PROFILE_T *now_profile)
+check_ipv4_address	main.c	/^static int check_ipv4_address(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
 class	QMIThread.h	/^    uint class;$/;"	m	struct:wwan_data_class_str	access:public
 class2str	QMIThread.c	/^struct wwan_data_class_str class2str[] = {$/;"	v	typeref:struct:wwan_data_class_str
 cleanup_qmi_connection	quectel-qmi-proxy.c	/^static void cleanup_qmi_connection(int clientfd) {$/;"	f	file:	signature:(int clientfd)
 client_qnode	quectel-qmi-proxy.c	/^    struct qlistnode client_qnode;$/;"	m	struct:__anon12	typeref:struct:__anon12::qlistnode	file:	access:public
 client_type	MPQMUX.h	/^    uint  client_type;$/;"	m	struct:_QMIWDS_BIND_MUX_DATA_PORT_REQ_MSG	access:public
-cln_bit	util.h	175;"	d
-clr_bit	util.h	174;"	d
+cln_bit	util.h	183;"	d
+clr_bit	util.h	182;"	d
 color_printf	qserial/include/tio/print.h	35;"	d
 connected	qserial/tty.c	/^static bool connected = false;$/;"	v	file:
 const	util.c	11;"	d	file:
 content	MPQMUX.h	/^    uchar  content[];$/;"	m	struct:_QMIUIM_CONTENT	access:public
 content_len	MPQMUX.h	/^    ushort content_len;$/;"	m	struct:_QMIUIM_CONTENT	access:public
-copy_bit	util.h	171;"	d
+copy_bit	util.h	179;"	d
 cpu_to_le16	QMIThread.h	/^extern ushort cpu_to_le16(ushort v16);$/;"	p	signature:(ushort v16)
 cpu_to_le16	quectel-qmi-proxy.c	23;"	d	file:
 cpu_to_le16	util.c	/^ushort cpu_to_le16(ushort v16) {$/;"	f	signature:(ushort v16)
@@ -2921,8 +2925,6 @@ daemon_pipe_fd	main.c	/^static int daemon_pipe_fd[2];$/;"	v	file:
 databits	qserial/include/tio/options.h	/^    int databits;$/;"	m	struct:option_t	access:public
 dbg	MPQMUX.c	6;"	d	file:
 dbg	MPQMUX.c	7;"	d	file:
-dbg_time	util.c	/^void dbg_time (const char *fmt, ...) {$/;"	f	signature:(const char *fmt, ...)
-dbg_time	util.h	/^void dbg_time (const char *fmt, ...);$/;"	p	signature:(const char *fmt, ...)
 debug	util.c	/^bool debug = false;$/;"	v
 debug	util.c	/^bool debug = true;$/;"	v
 debug_printf	qserial/include/tio/print.h	48;"	d
@@ -2942,18 +2944,18 @@ dir_has_child	util.c	/^bool dir_has_child(const char *dir, const char *fname) {$
 dir_has_child	util.h	/^bool dir_has_child(const char *dir, const char *fname);$/;"	p	signature:(const char *dir, const char *fname)
 dir_list	util.c	/^int dir_list(const char *dir, int (*match)(const char *dir, const char *file, void *argv[]), void *argv[]) {$/;"	f	signature:(const char *dir, int (*match)(const char *dir, const char *file, void *argv[]), void *argv[])
 dir_list	util.h	/^int dir_list(const char *dir, int (*match)(const char *dir, const char *file, void *argv[]), void *argv[]);$/;"	p	signature:(const char *dir, int (*match)(const char *dir, const char *file, void *argv[]), void *argv[])
-dir_skip	util.h	151;"	d
+dir_skip	util.h	152;"	d
 do_dhcp	dhcpclient.c	/^extern int do_dhcp(const char *iname);$/;"	p	file:	signature:(const char *iname)
 do_dhcp_request	dhcpclient.c	/^void do_dhcp_request(PROFILE_T *profile) {$/;"	f	signature:(PROFILE_T *profile)
 dri_type	util.h	/^    driver_t dri_type;$/;"	m	struct:__PROFILE	access:public
 driver_t	util.h	/^} driver_t;$/;"	t	typeref:enum:drivet_t_
 drivet_t_	util.h	/^typedef enum drivet_t_ {$/;"	g
 dumpQMIMutex	MPQMUX.c	/^static pthread_mutex_t dumpQMIMutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
-dump_ctl	MPQMUX.c	/^void dump_ctl(PQCQMICTL_MSG_HDR CTLHdr) {$/;"	f	signature:(PQCQMICTL_MSG_HDR CTLHdr)
+dump_ctl	MPQMUX.c	/^static void dump_ctl(PQCQMICTL_MSG_HDR CTLHdr) {$/;"	f	file:	signature:(PQCQMICTL_MSG_HDR CTLHdr)
 dump_qmi	MPQMUX.c	/^void dump_qmi(void *dataBuffer, int dataLen) {$/;"	f	signature:(void *dataBuffer, int dataLen)
 dump_qmi	QMIThread.h	/^extern void dump_qmi(void *dataBuffer, int dataLen);$/;"	p	signature:(void *dataBuffer, int dataLen)
-dump_qmux	MPQMUX.c	/^int dump_qmux(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr) {$/;"	f	signature:(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr)
-dump_tlv	MPQMUX.c	/^void dump_tlv(PQCQMUX_MSG_HDR pQMUXMsgHdr) {$/;"	f	signature:(PQCQMUX_MSG_HDR pQMUXMsgHdr)
+dump_qmux	MPQMUX.c	/^static int dump_qmux(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr) {$/;"	f	file:	signature:(QMI_SERVICE_TYPE serviceType, PQCQMUX_HDR QMUXHdr)
+dump_tlv	MPQMUX.c	/^static void dump_tlv(PQCQMUX_MSG_HDR pQMUXMsgHdr) {$/;"	f	file:	signature:(PQCQMUX_MSG_HDR pQMUXMsgHdr)
 epTlv	MPQMUX.h	/^    QMIWDS_ENDPOint_TLV epTlv;$/;"	m	struct:_QMIWDS_ADMIN_SET_DATA_FORMAT_REQ_MSG	access:public
 epTlv	quectel-qmi-proxy.c	/^    QMIWDS_ENDPOint_TLV epTlv;$/;"	m	struct:_QMIWDS_ADMIN_SET_DATA_FORMAT_REQ_MSG	file:	access:public
 ep_type	MPQMUX.h	/^    uint  ep_type;$/;"	m	struct:_QMIWDS_BIND_MUX_DATA_PORT_REQ_MSG	access:public
@@ -2967,7 +2969,7 @@ error_exit	qserial/error.c	/^void error_exit(void)$/;"	f	signature:(void)
 error_exit	qserial/include/tio/error.h	/^void error_exit(void);$/;"	p	signature:(void)
 error_printf	qserial/include/tio/error.h	30;"	d
 error_printf_silent	qserial/include/tio/error.h	33;"	d
-false	util.h	184;"	d
+false	util.h	191;"	d
 fd	qserial/tty.c	/^static int fd;$/;"	v	file:
 file_get_line	util.c	/^bool file_get_line(const char *fname, int which_line, char **content) {$/;"	f	signature:(const char *fname, int which_line, char **content)
 file_get_line	util.h	/^bool file_get_line(const char *fname, int which_line, char **content);$/;"	p	signature:(const char *fname, int which_line, char **content)
@@ -2978,7 +2980,8 @@ gQmiProcessTdID	main.c	/^pthread_t gQmiProcessTdID;$/;"	v
 gQmiThreadID	main.c	/^pthread_t gQmiThreadID;$/;"	v
 get_client_id	quectel-qmi-proxy.c	/^static void get_client_id(QMI_PROXY_CONNECTION *qmi_con, PQMICTL_GET_CLIENT_ID_RESP_MSG pClient) {$/;"	f	file:	signature:(QMI_PROXY_CONNECTION *qmi_con, PQMICTL_GET_CLIENT_ID_RESP_MSG pClient)
 get_dhcp_info	dhcpclient.c	/^extern void get_dhcp_info(uint32_t *ipaddr, uint32_t *gateway, uint32_t *prefixLength,$/;"	p	file:	signature:(uint32_t *ipaddr, uint32_t *gateway, uint32_t *prefixLength, uint32_t *dns1, uint32_t *dns2, uint32_t *server, uint32_t *lease)
-get_time	util.c	/^static const char * get_time(void) {$/;"	f	file:	signature:(void)
+get_time	util.c	/^const char * get_time(void) {$/;"	f	signature:(void)
+get_time	util.h	/^const char * get_time(void);$/;"	p	signature:(void)
 gstProfile	main.c	/^PROFILE_T *gstProfile = NULL;$/;"	v
 handle_command_sequence	qserial/tty.c	/^void handle_command_sequence(char input_char, char previous_char, char *output_char, bool *forward)$/;"	f	signature:(char input_char, char previous_char, char *output_char, bool *forward)
 i	util.c	/^const int i = 1;$/;"	v
@@ -2992,13 +2995,12 @@ int16	util.h	/^typedef short			int16;$/;"	t
 int8	util.h	/^typedef char			int8;$/;"	t
 ipaddr_to_string	dhcpclient.c	/^static const char *ipaddr_to_string(in_addr_t addr) {$/;"	f	file:	signature:(in_addr_t addr)
 ipv4	util.h	/^    IPV4_T ipv4;$/;"	m	struct:__PROFILE	access:public
-ipv4	util.h	178;"	d
-ipv4v6	util.h	179;"	d
+ipv4	util.h	186;"	d
 ipv6	util.h	/^    IPV6_T ipv6;$/;"	m	struct:__PROFILE	access:public
-ipv6	util.h	177;"	d
+ipv6	util.h	185;"	d
 is856SysId	MPQMUX.h	/^    uchar  is856SysId[16];$/;"	m	struct:_HDR_SYSTEM_INFO	access:public
 is856SysIdValid	MPQMUX.h	/^    uchar  is856SysIdValid;$/;"	m	struct:_HDR_SYSTEM_INFO	access:public
-is_bigendian	util.c	113;"	d	file:
+is_bigendian	util.c	87;"	d	file:
 is_quectel_device	quectel-qmi-proxy.c	/^static bool is_quectel_device(const char *path) {$/;"	f	file:	signature:(const char *path)
 is_quectel_device_v2	main.c	/^static bool is_quectel_device_v2(const char *path) {$/;"	f	file:	signature:(const char *path)
 is_response	QMIThread.c	/^static int is_response(const PQCQMIMSG pRequest, const PQCQMIMSG pResponse) {$/;"	f	file:	signature:(const PQCQMIMSG pRequest, const PQCQMIMSG pResponse)
@@ -3009,7 +3011,6 @@ le32_to_cpu	QMIThread.h	/^extern uint  le32_to_cpu (uint v32);$/;"	p	signature:(
 le32_to_cpu	quectel-qmi-proxy.c	26;"	d	file:
 le32_to_cpu	util.c	/^uint  le32_to_cpu (uint v32) {$/;"	f	signature:(uint v32)
 line	MPQMUX.c	/^static char line[1024];$/;"	v	file:
-line	util.c	/^static char line[1024];$/;"	v	file:
 list_add_head	util.h	/^void list_add_head(struct listnode *head, struct listnode *item);$/;"	p	signature:(struct listnode *head, struct listnode *item)
 list_add_tail	util.h	/^void list_add_tail(struct listnode *list, struct listnode *item);$/;"	p	signature:(struct listnode *list, struct listnode *item)
 list_declare	util.h	108;"	d
@@ -3027,22 +3028,23 @@ local_echo	qserial/include/tio/options.h	/^    bool local_echo;$/;"	m	struct:opt
 log	qserial/include/tio/options.h	/^    bool log;$/;"	m	struct:option_t	access:public
 log_close	qserial/include/tio/log.h	/^void log_close(void);$/;"	p	signature:(void)
 log_close	qserial/log.c	/^void log_close(void)$/;"	f	signature:(void)
-log_debug	util.h	164;"	d
+log_debug	util.h	172;"	d
 log_error	qserial/log.c	/^static bool log_error = false;$/;"	v	file:
-log_error	util.h	166;"	d
+log_error	util.h	174;"	d
 log_exit	qserial/include/tio/log.h	/^void log_exit(void);$/;"	p	signature:(void)
 log_exit	qserial/log.c	/^void log_exit(void)$/;"	f	signature:(void)
-log_fatal	util.h	167;"	d
+log_fatal	util.h	175;"	d
 log_filename	qserial/include/tio/options.h	/^    const char *log_filename;$/;"	m	struct:option_t	access:public
-log_info	util.h	168;"	d
+log_info	util.h	176;"	d
 log_open	qserial/include/tio/log.h	/^void log_open(const char *filename);$/;"	p	signature:(const char *filename)
 log_open	qserial/log.c	/^void log_open(const char *filename)$/;"	f	signature:(const char *filename)
-log_return_val_if_fail	util.h	188;"	d
-log_verbose	util.h	169;"	d
-log_warn	util.h	165;"	d
+log_print	util.h	168;"	d
+log_print	util.h	170;"	d
+log_return_val_if_fail	util.h	195;"	d
+log_verbose	util.h	177;"	d
+log_warn	util.h	173;"	d
 log_write	qserial/include/tio/log.h	/^void log_write(char c);$/;"	p	signature:(char c)
 log_write	qserial/log.c	/^void log_write(char c)$/;"	f	signature:(char c)
-logfilefp	util.c	/^FILE *logfilefp = NULL;$/;"	v
 logfp	util.h	/^    FILE * logfp;$/;"	m	struct:__PROFILE	access:public
 main	qserial/serial.c	/^int main(int argc, char *argv[])$/;"	f	signature:(int argc, char *argv[])
 main	quectel-qmi-proxy.c	/^int main(int argc, char *argv[]) {$/;"	f	signature:(int argc, char *argv[])
@@ -3096,13 +3098,14 @@ print_help	qserial/options.c	/^void print_help(char *argv[])$/;"	f	signature:(ch
 print_hex	qserial/tty.c	/^static void print_hex(char c)$/;"	f	file:	signature:(char c)
 print_mode	qserial/tty.c	/^static bool print_mode = NORMAL;$/;"	v	file:
 print_normal	qserial/tty.c	/^static void print_normal(char c)$/;"	f	file:	signature:(char c)
-printfMutex	util.c	/^static pthread_mutex_t printfMutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
+progress_bar	util.c	/^int progress_bar(int numerator, int denominator, int style)$/;"	f	signature:(int numerator, int denominator, int style)
+progress_bar	util.h	/^int progress_bar(int numerator, int denominator, int style);$/;"	p	signature:(int numerator, int denominator, int style)
 pthread_cond_timeout_np	QMIThread.h	/^extern int pthread_cond_timeout_np(pthread_cond_t *cond, pthread_mutex_t * mutex, unsigned msecs);$/;"	p	signature:(pthread_cond_t *cond, pthread_mutex_t * mutex, unsigned msecs)
 pthread_cond_timeout_np	quectel-qmi-proxy.c	/^static int pthread_cond_timeout_np(pthread_cond_t *cond, pthread_mutex_t * mutex, unsigned msecs) {$/;"	f	file:	signature:(pthread_cond_t *cond, pthread_mutex_t * mutex, unsigned msecs)
 pthread_cond_timeout_np	util.c	/^int pthread_cond_timeout_np(pthread_cond_t *cond,$/;"	f	signature:(pthread_cond_t *cond, pthread_mutex_t * mutex, unsigned msecs)
 puchar	util.h	/^typedef unsigned char   *puchar;$/;"	t
-qfree	util.c	/^void qfree(void *p) {$/;"	f	signature:(void *p)
-qfree	util.h	/^void qfree(void *p);$/;"	p	signature:(void *p)
+qfree	util.c	/^void qfree(void **p) {$/;"	f	signature:(void **p)
+qfree	util.h	/^void qfree(void **p);$/;"	p	signature:(void **p)
 ql_enter_daemon	main.c	/^static void ql_enter_daemon(int signo) {$/;"	f	file:	signature:(int signo)
 ql_prepare_daemon	main.c	/^static void ql_prepare_daemon(void) {$/;"	f	file:	signature:(void)
 ql_set_mtu	udhcpc.c	/^static void ql_set_mtu(const char *ifname, int ifru_mtu) {$/;"	f	file:	signature:(const char *ifname, int ifru_mtu)
@@ -3129,21 +3132,22 @@ qmi_IFType	MPQMUX.c	/^static const QMI_NAME_T qmi_IFType[] = {$/;"	v	file:
 qmi_QMIType	MPQMUX.c	/^static const QMI_NAME_T qmi_QMIType[] = {$/;"	v	file:
 qmi_banner	main.c	/^static void qmi_banner(void) {$/;"	f	file:	signature:(void)
 qmi_bridge_set	udhcpc.c	/^static void qmi_bridge_set(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
-qmi_check_network	main.c	/^static int qmi_check_network(void) {$/;"	f	file:	signature:(void)
-qmi_cleanup	main.c	/^static void qmi_cleanup(void) {$/;"	f	file:	signature:(void)
+qmi_check_network	main.c	/^static int qmi_check_network(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_cleanup	main.c	/^static void qmi_cleanup(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
 qmi_ctl_CtlFlags	MPQMUX.c	/^static const QMI_NAME_T qmi_ctl_CtlFlags[] = {$/;"	v	file:
-qmi_detect_device	main.c	/^static bool qmi_detect_device(void) {$/;"	f	file:	signature:(void)
-qmi_detect_device	quectel-qmi-proxy.c	/^static bool qmi_detect_device(char **iface, char **dev) {$/;"	f	file:	signature:(char **iface, char **dev)
+qmi_detect_device	main.c	/^static bool qmi_detect_device(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_detect_device	quectel-qmi-proxy.c	/^static bool qmi_detect_device(char **dev) {$/;"	f	file:	signature:(char **dev)
 qmi_dev	util.h	/^    char * qmi_dev;$/;"	m	struct:__PROFILE	access:public
-qmi_driver_gobi	main.c	/^static int qmi_driver_gobi(void) {$/;"	f	file:	signature:(void)
-qmi_driver_wwan	main.c	/^static int qmi_driver_wwan(void) {$/;"	f	file:	signature:(void)
+qmi_driver_gobi	main.c	/^static int qmi_driver_gobi(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_driver_wwan	main.c	/^static int qmi_driver_wwan(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
 qmi_event_proc	main.c	/^static void * qmi_event_proc(void *pData) {$/;"	f	file:	signature:(void *pData)
-qmi_find_tlv	quectel-qmi-proxy.c	/^PQCQMUX_TLV qmi_find_tlv (PQCQMIMSG pQMI, uint8_t TLVType) {$/;"	f	signature:(PQCQMIMSG pQMI, uint8_t TLVType)
-qmi_link_change	main.c	/^static void qmi_link_change(int link) {$/;"	f	file:	signature:(int link)
+qmi_find_tlv	quectel-qmi-proxy.c	/^static PQCQMUX_TLV qmi_find_tlv (PQCQMIMSG pQMI, uint8_t TLVType) {$/;"	f	file:	signature:(PQCQMIMSG pQMI, uint8_t TLVType)
+qmi_link_change	main.c	/^static void qmi_link_change(PROFILE_T *profile, int link) {$/;"	f	file:	signature:(PROFILE_T *profile, int link)
 qmi_name_get	MPQMUX.c	/^static const char * qmi_name_get(const QMI_NAME_T *table, size_t size, int type, const char *tag) {$/;"	f	file:	signature:(const QMI_NAME_T *table, size_t size, int type, const char *tag)
-qmi_name_item	MPQMUX.c	16;"	d	file:
-qmi_packet_count_check	main.c	/^static int qmi_packet_count_check(void) {$/;"	f	file:	signature:(void)
-qmi_parser_args	main.c	/^static void qmi_parser_args(int argc, char **argv) {$/;"	f	file:	signature:(int argc, char **argv)
+qmi_name_item	MPQMUX.c	14;"	d	file:
+qmi_packet_count_check	main.c	/^static int qmi_packet_count_check(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_parser_args	main.c	/^static void qmi_parser_args(PROFILE_T *profile, int argc, char **argv) {$/;"	f	file:	signature:(PROFILE_T *profile, int argc, char **argv)
+qmi_profile_init	main.c	/^void qmi_profile_init(PROFILE_T *profile)$/;"	f	signature:(PROFILE_T *profile)
 qmi_proxy_connection	quectel-qmi-proxy.c	/^static struct qlistnode qmi_proxy_connection;$/;"	v	typeref:struct:qlistnode	file:
 qmi_proxy_ctl_msg	quectel-qmi-proxy.c	/^static struct qlistnode qmi_proxy_ctl_msg;$/;"	v	typeref:struct:qlistnode	file:
 qmi_proxy_init	quectel-qmi-proxy.c	/^static int qmi_proxy_init(void) {$/;"	f	file:	signature:(void)
@@ -3152,15 +3156,15 @@ qmi_proxy_open	QMIThread.h	/^extern int qmi_proxy_open(const char *name);$/;"	p	
 qmi_proxy_open	QmiWwanCM.c	/^int qmi_proxy_open(const char *name) {$/;"	f	signature:(const char *name)
 qmi_proxy_read	QmiWwanCM.c	/^static ssize_t qmi_proxy_read (int fd, void *buf, size_t size) {$/;"	f	file:	signature:(int fd, void *buf, size_t size)
 qmi_proxy_server_fd	quectel-qmi-proxy.c	/^static int qmi_proxy_server_fd = -1;$/;"	v	file:
-qmi_qmap_detect	main.c	/^static int qmi_qmap_detect(void) {$/;"	f	file:	signature:(void)
-qmi_query_info	main.c	/^static void qmi_query_info(void) {$/;"	f	file:	signature:(void)
+qmi_qmap_detect	main.c	/^static int qmi_qmap_detect(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_query_info	main.c	/^static void qmi_query_info(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
 qmi_rsp_check_and_return	QMIThread.c	5;"	d	file:
-qmi_run	main.c	/^static int qmi_run(void) {$/;"	f	file:	signature:(void)
-qmi_set_profile	main.c	/^static int qmi_set_profile(void) {$/;"	f	file:	signature:(void)
-qmi_show	main.c	/^static void qmi_show(PROFILE_T *profile)$/;"	f	file:	signature:(PROFILE_T *profile)
-qmi_start_network	main.c	/^static int qmi_start_network(void) {$/;"	f	file:	signature:(void)
-qmi_stop_network	main.c	/^static int qmi_stop_network(void) {$/;"	f	file:	signature:(void)
-qmi_thread_loop	main.c	/^static int qmi_thread_loop(void) {$/;"	f	file:	signature:(void)
+qmi_run	main.c	/^static int qmi_run(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_set_profile	main.c	/^static int qmi_set_profile(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_show	main.c	/^static void qmi_show(const PROFILE_T *profile)$/;"	f	file:	signature:(const PROFILE_T *profile)
+qmi_start_network	main.c	/^static int qmi_start_network(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_stop_network	main.c	/^static int qmi_stop_network(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
+qmi_thread_loop	main.c	/^static int qmi_thread_loop(PROFILE_T *profile) {$/;"	f	file:	signature:(PROFILE_T *profile)
 qmiclientId	QMIThread.c	/^int qmiclientId[QMUX_TYPE_WDS_ADMIN + 1]; \/\/GobiNet use fd to indicate client ID, so type of qmiclientId must be int$/;"	v
 qmidevice_control_fd	main.c	/^int qmidevice_control_fd[2];$/;"	v
 qmux_CtlFlags	MPQMUX.c	/^static const QMI_NAME_T qmux_CtlFlags[] = {$/;"	v	file:
@@ -3215,8 +3219,8 @@ requestSetProfile	QMIThread.c	/^int requestSetProfile(PROFILE_T *profile) {$/;"	
 requestSetProfile	QMIThread.h	/^extern int requestSetProfile(PROFILE_T *profile);$/;"	p	signature:(PROFILE_T *profile)
 requestSetupDataCall	QMIThread.c	/^int requestSetupDataCall(PROFILE_T *profile, int curIpFamily) {$/;"	f	signature:(PROFILE_T *profile, int curIpFamily)
 requestSetupDataCall	QMIThread.h	/^extern int requestSetupDataCall(PROFILE_T *profile, int curIpFamily);$/;"	p	signature:(PROFILE_T *profile, int curIpFamily)
-return_if_fail	util.h	186;"	d
-return_val_if_fail	util.h	187;"	d
+return_if_fail	util.h	193;"	d
+return_val_if_fail	util.h	194;"	d
 rx_total	qserial/tty.c	/^static unsigned long rx_total = 0, tx_total = 0;$/;"	v	file:
 rx_urb_size	QMIThread.c	/^    uint rx_urb_size;$/;"	m	struct:__anon4	file:	access:public
 s_9x07	QMIThread.c	/^static int s_9x07 = -1;$/;"	v	file:
@@ -3241,7 +3245,7 @@ send_to_qmidevice	main.c	/^static void send_to_qmidevice(int triger_event) {$/;"
 serial_run	qserial/serial.h	/^int serial_run(int argc, char *argv[]);/;"	p	signature:(int argc, char *argv[])
 setTimespecRelative	quectel-qmi-proxy.c	/^static void setTimespecRelative(struct timespec *p_ts, long long msec) {$/;"	f	file:	signature:(struct timespec *p_ts, long long msec)
 setTimespecRelative	util.c	/^static void setTimespecRelative(struct timespec *p_ts, long long msec) {$/;"	f	file:	signature:(struct timespec *p_ts, long long msec)
-set_bit	util.h	173;"	d
+set_bit	util.h	181;"	d
 setspeed2	qserial/setspeed2.c	/^int setspeed2(int fd, int baudrate)$/;"	f	signature:(int fd, int baudrate)
 setspeed2	qserial/tty.c	/^extern int setspeed2(int fd, int baudrate);$/;"	p	file:	signature:(int fd, int baudrate)
 sig_action	main.c	/^static void sig_action(int signo) {$/;"	f	file:	signature:(int signo)
@@ -3260,6 +3264,8 @@ stdout_restore	qserial/include/tio/tty.h	/^void stdout_restore(void);$/;"	p	sign
 stdout_restore	qserial/tty.c	/^void stdout_restore(void)$/;"	f	signature:(void)
 stopbits	qserial/include/tio/options.h	/^    int stopbits;$/;"	m	struct:option_t	access:public
 str	QMIThread.h	/^    char *str;$/;"	m	struct:wwan_data_class_str	access:public
+str_char_replace	util.c	/^void str_char_replace(char **str, char c1, char c2)$/;"	f	signature:(char **str, char c1, char c2)
+str_char_replace	util.h	/^void str_char_replace(char **str, char c1, char c2);$/;"	p	signature:(char **str, char c1, char c2)
 str_dup_until	util.c	/^char *str_dup_until(const char *str, char split) {$/;"	f	signature:(const char *str, char split)
 str_dup_until	util.h	/^char *str_dup_until(const char *str, char split);$/;"	p	signature:(const char *str, char split)
 str_get_val_with_key	util.c	/^char *str_get_val_with_key(const char *str, const char *key) {$/;"	f	signature:(const char *str, const char *key)
@@ -3278,12 +3284,12 @@ str_trim	util.c	/^void str_trim(char **str) {$/;"	f	signature:(char **str)
 str_trim	util.h	/^void str_trim(char **str);$/;"	p	signature:(char **str)
 string_to_long	qserial/options.c	/^long string_to_long(char *string)$/;"	f	signature:(char *string)
 tainted	qserial/tty.c	/^static bool tainted = false;$/;"	v	file:
-test_bit	util.h	172;"	d
+test_bit	util.h	180;"	d
 timestamp	qserial/include/tio/options.h	/^    bool timestamp;$/;"	m	struct:option_t	access:public
 tio	qserial/tty.c	/^static struct termios tio, tio_old, stdout_new, stdout_old, stdin_new, stdin_old;$/;"	v	typeref:struct:termios	file:
 tio_old	qserial/tty.c	/^static struct termios tio, tio_old, stdout_new, stdout_old, stdin_new, stdin_old;$/;"	v	typeref:struct:	file:
 tio_printf	qserial/tty.c	63;"	d	file:
-true	util.h	183;"	d
+true	util.h	190;"	d
 tty_configure	qserial/include/tio/tty.h	/^void tty_configure(void);$/;"	p	signature:(void)
 tty_configure	qserial/tty.c	/^void tty_configure(void)$/;"	f	signature:(void)
 tty_connect	qserial/include/tio/tty.h	/^int tty_connect(void);$/;"	p	signature:(void)
@@ -3313,6 +3319,7 @@ uint8_t	quectel-qmi-proxy.c	/^typedef unsigned char uint8_t;$/;"	t	file:
 usage	main.c	/^static int usage(const char *progname) {$/;"	f	file:	signature:(const char *progname)
 user	util.h	/^    char *user;$/;"	m	struct:__PROFILE	access:public
 ushort	util.h	/^typedef unsigned short  ushort;$/;"	t
+val_name	util.h	196;"	d
 verbose	util.c	/^bool verbose = false;$/;"	v
 verbose_debug	quectel-qmi-proxy.c	/^static int verbose_debug = 0;$/;"	v	file:
 vid	util.h	/^    int vid;$/;"	m	struct:__anon13	access:public

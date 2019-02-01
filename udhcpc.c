@@ -51,7 +51,7 @@ static void* udhcpc_thread_function(void* arg) {
 
     log_info("%s", udhcpc_cmd);
     udhcpc_fp = popen(udhcpc_cmd, "r");
-    free(udhcpc_cmd);
+    qfree((void*)&udhcpc_cmd);
     if (udhcpc_fp) {
         char buf[0xff];
 

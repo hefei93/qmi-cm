@@ -158,8 +158,8 @@ void *malloc0(int size) {
     return p;
 }
 
-void qfree(void *p) {
-    if (p) free(p);
+void qfree(void **p) {
+    if (*p) { free(*p); *p = NULL;}
 }
 
 // string
@@ -249,6 +249,14 @@ void str_ltrim(char **str) {
 void str_trim(char **str) {
     str_rtrim(str);
     str_ltrim(str);
+}
+
+void str_char_replace(char **str, char c1, char c2)
+{
+    char *ptr = NULL;
+    while((ptr = index(*str, c1)) != NULL) {
+        *ptr = c2;
+    }
 }
 
 // directory
@@ -345,3 +353,45 @@ int ql_system(const char *shell_cmd) {
     return ret;
 }
 
+/* progress bar 
+* 0 success
+* -1 invalid parameter
+*/
+int progress_bar(int numerator, int denominator, int style)
+{
+    char buf[256] = {'\0'};
+    char line[256] = {'\0'};
+    char *prefix = "\r";
+    const char* lable = "|/-\\";//打印旋转的图标
+    const char c = '#';
+    int percent = 100 * numerator / denominator;
+
+    return_val_if_fail(percent <= 100, -1);
+    if (style & O_BAR) {
+        memset(buf, c, percent);
+        snprintf(line + strlen(line), sizeof(line), "[%-100s]", buf);
+    }
+    
+    if (style & O_PERCENT) {
+        snprintf(line + strlen(line), sizeof(line), " %3d%%", percent);
+    }
+    
+    if (style & O_LABLE) {
+        /* remove suffix [-] when complete*/
+        if (percent < 99)
+            snprintf(line + strlen(line), sizeof(line), " [%c]", *(lable + percent % 4));
+        else
+            snprintf(line + strlen(line), sizeof(line), "    ");
+    }
+    
+    if (style & O_LOAD) {
+        snprintf(line + strlen(line), sizeof(line), "%c", c);
+        prefix = "";
+    }
+    
+    /* output */
+    dprintf(0, "%s%s", prefix, line);
+    fflush(stdout);
+    
+    return 0;
+}

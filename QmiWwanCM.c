@@ -119,31 +119,31 @@ static int QmiWwanGetClientID(uchar QMIType) {
         if (!QMUXResult && !QMUXError && (QMIType == pResponse->CTLMsg.GetClientIdRsp.QMIType)) {
             switch (QMIType) {
             case QMUX_TYPE_WDS:
-                log_info("Get clientWDS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_WDS), ClientId);
                 break;
             case QMUX_TYPE_DMS:
-                log_info("Get clientDMS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_DMS), ClientId);
                 break;
             case QMUX_TYPE_NAS:
-                log_info("Get clientNAS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_NAS), ClientId);
                 break;
             case QMUX_TYPE_QOS:
-                log_info("Get clientQOS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_QOS), ClientId);
                 break;
             case QMUX_TYPE_WMS:
-                log_info("Get clientWMS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_WMS), ClientId);
                 break;
             case QMUX_TYPE_PDS:
-                log_info("Get clientPDS = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_PDS), ClientId);
                 break;
             case QMUX_TYPE_UIM:
-                log_info("Get clientUIM = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_UIM), ClientId);
                 break;
             case QMUX_TYPE_WDS_ADMIN:
-                log_info("Get clientWDA = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_WDS_ADMIN), ClientId);
                 break;
             case QMUX_TYPE_WDS_IPV6:
-                log_info("Get clientWDS_IPV6 = %d", ClientId);
+                log_info("%s clientID %d", val_name(QMUX_TYPE_WDS_IPV6), ClientId);
                 break;
             default:
                 break;
@@ -165,7 +165,8 @@ int QmiWwanInit(PROFILE_T *profile) {
     int ret;
     PQCQMIMSG pResponse;
 
-    if (profile->qmap_iface == NULL || profile->qmap_iface == profile->iface) {        // message may be failed if fd has not been set
+    if (profile->qmap_iface == NULL || profile->qmap_iface == profile->iface) {
+		// get/dump message may be failed if fd has not been set
         for (i = 0; i < 10; i++) {
             ret = QmiThreadSendQMITimeout(ComposeQCTLMsg(QMICTL_SYNC_REQ, NULL, NULL), NULL, 1 * 1000);
             if (!ret)
@@ -183,13 +184,17 @@ int QmiWwanInit(PROFILE_T *profile) {
                 uint8_t  NumElements = 0;
 
                 for (NumElements = 0; NumElements < pResponse->CTLMsg.GetVersionRsp.NumElements; NumElements++) {
+                    log_info("QMUXType = %02x Version = %d.%d",
+                             pResponse->CTLMsg.GetVersionRsp.TypeVersion[NumElements].QMUXType,
+                             pResponse->CTLMsg.GetVersionRsp.TypeVersion[NumElements].MajorVersion,
+                             pResponse->CTLMsg.GetVersionRsp.TypeVersion[NumElements].MinorVersion);
                     if (pResponse->CTLMsg.GetVersionRsp.TypeVersion[NumElements].QMUXType == QMUX_TYPE_WDS_ADMIN)
                         profile->qmap_version = (pResponse->CTLMsg.GetVersionRsp.TypeVersion[NumElements].MinorVersion > 16);
                 }
             }
         }
     }
-    if (pResponse) free(pResponse);
+    qfree((void**)&pResponse);
 
     if (ipv4(profile->iPSupported))
         qmiclientId[QMUX_TYPE_WDS] = QmiWwanGetClientID(QMUX_TYPE_WDS);

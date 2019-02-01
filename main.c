@@ -220,6 +220,12 @@ static void sig_action(int signo) {
     }
 }
 
+void qmi_profile_init(PROFILE_T *profile)
+{
+    return_if_fail(profile != NULL);
+    set_bit(profile->iPSupported, IpFamilyV4);
+}
+
 static int usage(const char *progname) {
     log_info("[Usage]: %s [options]", progname);
     log_info("");
@@ -251,14 +257,15 @@ static int usage(const char *progname) {
 static void qmi_show(const PROFILE_T *profile)
 {
     return_if_fail(profile != NULL);
-    log_info("pdp %d", profile->pdp);
-    log_info("apn %s", profile->apn);
-    log_info("auth %d", profile->auth);
-    log_info("pin %s", profile->pincode);
-    log_info("user %s", profile->user);
-    log_info("password %s", profile->password);
-    log_info("IPv4 (%s), IPv6 (%s)", (profile->curIpFamily == IpFamilyV4)?"enable":"disable",
-             (profile->curIpFamily == IpFamilyV6)?"enable":"disable");
+    log_info("QMI parameters:");
+    log_info("pdp\t\t%d", profile->pdp);
+    log_info("apn\t\t%s", profile->apn);
+    log_info("auth\t\t%d", profile->auth);
+    log_info("pin\t\t%s", profile->pincode);
+    log_info("user\t\t%s", profile->user);
+    log_info("password\t\t%s", profile->password);
+    log_info("IPv4 (%s), IPv6 (%s)", ipv4(profile->iPSupported)?"enable":"disable", ipv6(profile->iPSupported)?"enable":"disable");
+    log_info("");
 }
 
 static void qmi_parser_args(PROFILE_T *profile, int argc, char **argv) {
@@ -284,16 +291,15 @@ static void qmi_parser_args(PROFILE_T *profile, int argc, char **argv) {
         argv[argc - 1][strlen(argv[argc - 1]) - 1] = '\0';
     }
 
+    qmi_profile_init(profile);
     while ((opt = getopt_long(argc, argv, "s:I:i:d:p:f:46Vvh", long_options, &long_idx)) != -1) {
         switch (opt) {
             log_info("%c", opt);
         case '4':
             set_bit(profile->iPSupported, IpFamilyV4);
-            set_bit(profile->curIpFamily, IpFamilyV4);
             break;
         case '6':
             set_bit(profile->iPSupported, IpFamilyV6);
-            set_bit(profile->curIpFamily, IpFamilyV6);
             break;
         case 's':
             /* 0 ~ None, 1 ~ Pap, 2 ~ Chap (default), 3 ~ MsChapV2 */
@@ -352,15 +358,15 @@ static bool is_quectel_device_v1(const char *path) {
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idProduct", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &pid) == false) {
-        qfree(pid);
+        qfree((void**)&pid);
         return false;
     }
 
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idVendor", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &vid) == false) {
-        qfree(pid);
-        qfree(vid);
+        qfree((void**)&pid);
+        qfree((void**)&vid);
         return false;
     }
 
@@ -370,14 +376,14 @@ static bool is_quectel_device_v1(const char *path) {
         if (str_is_digit(vid, quectel_device_list[idx].vid, 16) && str_is_digit(pid, quectel_device_list[idx].pid, 16)) {
             profile->dev_info = &quectel_device_list[idx];
             log_info("Find quectel device (%x:%x) in %s", quectel_device_list[idx].vid, quectel_device_list[idx].pid, path);
-            qfree(vid);
-            qfree(pid);
+            qfree((void**)&vid);
+            qfree((void**)&pid);
             return true;
         }
     }
 
-    qfree(vid);
-    qfree(pid);
+    qfree((void**)&vid);
+    qfree((void**)&pid);
     return false;
 }
 #endif
@@ -390,28 +396,30 @@ static bool is_quectel_device_v2(const char *path) {
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idProduct", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &pid) == false) {
-        qfree(pid);
+        qfree((void**)&pid);
         return false;
     }
 
     return_val_if_fail(snprintf(fname, sizeof(fname), "%s/idVendor", path) > 0, false);
     return_val_if_fail(access(fname, R_OK) == 0, false);
     if (file_get_line(fname, 1, &vid) == false) {
-        qfree(pid);
-        qfree(vid);
+        qfree((void**)&pid);
+        qfree((void**)&vid);
         return false;
     }
 
     /* Quectel Vendor ID 0x2c7c */
     if (str_is_digit(vid, 0x2c7c, 16)) {
+        str_char_replace(&vid, '\n', '\0');
+        str_char_replace(&pid, '\n', '\0');
         log_info("Find quectel device (%s:%s) in %s", vid, pid, path);
-        qfree(vid);
-        qfree(pid);
+        qfree((void**)&vid);
+        qfree((void**)&pid);
         return true;
     }
 
-    qfree(vid);
-    qfree(pid);
+    qfree((void**)&vid);
+    qfree((void**)&pid);
     return false;
 }
 
@@ -1084,7 +1092,6 @@ int main(int argc, char *argv[])
 {
     gstProfile = (PROFILE_T*)malloc(sizeof(PROFILE_T));
     memset(gstProfile, 0x00, sizeof(PROFILE_T));
-    gstProfile->pdp = CONFIG_DEFAULT_PDP;
 
     qmi_parser_args(gstProfile, argc, argv);
     qmi_banner();

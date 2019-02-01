@@ -16,7 +16,7 @@
             ushort QMUXError = le16_to_cpu(pMUXMsg->QMUXMsgHdrResp.QMUXError); \
             log_info("%s QMUXResult = 0x%x, QMUXError = 0x%x", __func__, \
                 le16_to_cpu(pMUXMsg->QMUXMsgHdrResp.QMUXResult), QMUXError); \
-            free(pResponse); \
+            qfree((void*)&pResponse); \
             return QMUXError; \
         } \
 } while(0)
@@ -78,7 +78,7 @@ static PQCQMIMSG ComposeQMUXMsg(uchar QMIType, ushort Type, CUSTOMQMUX customQmu
     pRequest->QMIHdr.ClientId = qmiclientId[QMIType] & 0xFF;
 
     if (qmiclientId[QMIType] == 0) {
-        log_info("QMIType %d has no clientID", QMIType);
+        log_error("QMIType %d has no clientID", QMIType);
         return NULL;
     }
 
@@ -456,11 +456,11 @@ static ushort WdsModifyProfileSettingsReq(PQMUX_MSG pMUXMsg, void *arg) {
 // 1 ?C PDP-PPP
 // 2 ?C PDP-IPv6
 // 3 ?C PDP-IPv4v6
-    if (ipv4v6(profile->iPSupported))
+    if (ipv4(profile->iPSupported) && ipv6(profile->iPSupported))
         pPdpType->PdpType = 3;
-    if (ipv6(profile->iPSupported))
+    else if (ipv6(profile->iPSupported))
         pPdpType->PdpType = 2;
-    if (ipv4(profile->iPSupported))
+    else if (ipv4(profile->iPSupported))
         pPdpType->PdpType = 0;
     TLVLength +=(le16_to_cpu(pPdpType->TLVLength) + sizeof(QCQMICTL_TLV_HDR));
 
@@ -505,7 +505,7 @@ static ushort WdsModifyProfileSettingsReq(PQMUX_MSG pMUXMsg, void *arg) {
 #endif
 
 static ushort WdsGetRuntimeSettingReq(PQMUX_MSG pMUXMsg, void *arg) {
-    (void)arg;
+    arg = arg;
     pMUXMsg->GetRuntimeSettingsReq.TLVType = 0x10;
     pMUXMsg->GetRuntimeSettingsReq.TLVLength = cpu_to_le16(0x04);
     // the following mask also applies to IPV6
@@ -571,7 +571,7 @@ int QmiThreadSendQMITimeout(PQCQMIMSG pRequest, PQCQMIMSG *ppResponse, unsigned 
                 *ppResponse = s_pResponse;
             } else {
                 if (s_pResponse) {
-                    free(s_pResponse);
+                    qfree((void*)&s_pResponse);
                     s_pResponse = NULL;
                 }
             }
@@ -593,7 +593,7 @@ void QmiThreadRecvQMI(PQCQMIMSG pResponse) {
     pthread_mutex_lock(&s_commandmutex);
     if (pResponse == NULL) {
         if (s_pRequest) {
-            free(s_pRequest);
+            qfree((void*)&s_pRequest);
             s_pRequest = NULL;
             s_pResponse = NULL;
             pthread_cond_signal(&s_commandcond);
@@ -603,7 +603,7 @@ void QmiThreadRecvQMI(PQCQMIMSG pResponse) {
     }
     dump_qmi(pResponse, le16_to_cpu(pResponse->QMIHdr.Length) + 1);
     if (s_pRequest && is_response(s_pRequest, pResponse)) {
-        free(s_pRequest);
+        qfree((void*)&s_pRequest);
         s_pRequest = NULL;
         s_pResponse = malloc(le16_to_cpu(pResponse->QMIHdr.Length) + 1);
         if (s_pResponse != NULL) {
@@ -627,7 +627,7 @@ void QmiThreadRecvQMI(PQCQMIMSG pResponse) {
 }
 
 int requestSetEthMode(PROFILE_T *profile) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse = NULL;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -667,7 +667,7 @@ int requestSetEthMode(PROFILE_T *profile) {
         profile->rawIP = (le32_to_cpu(linkProto->Value) == 2);
         s_9x07 = profile->rawIP;
     }
-    free(pResponse);
+    qfree((void*)&pResponse);
 
 skip_WdaSetDataFormat:
     if (profile->qmap_iface) {
@@ -675,14 +675,14 @@ skip_WdaSetDataFormat:
         pRequest = ComposeQMUXMsg(QMUX_TYPE_WDS, QMIWDS_BIND_MUX_DATA_PORT_REQ , WdsSetQMUXBindMuxDataPort, (void *)&qmap_settings);
         err = QmiThreadSendQMI(pRequest, &pResponse);
         qmi_rsp_check_and_return();
-        if (pResponse) free(pResponse);
+        qfree((void*)&pResponse);
     }
 
     // set ipv4
     IpPreference = IpFamilyV4;
     pRequest = ComposeQMUXMsg(QMUX_TYPE_WDS, QMIWDS_SET_CLIENT_IP_FAMILY_PREF_REQ, WdsSetClientIPFamilyPref, (void *)&IpPreference);
     err = QmiThreadSendQMI(pRequest, &pResponse);
-    if (pResponse) free(pResponse);
+    qfree((void*)&pResponse);
 
     if (ipv6(profile->iPSupported)) {
         if (profile->qmap_iface) {
@@ -690,7 +690,7 @@ skip_WdaSetDataFormat:
             pRequest = ComposeQMUXMsg(QMUX_TYPE_WDS_IPV6, QMIWDS_BIND_MUX_DATA_PORT_REQ , WdsSetQMUXBindMuxDataPort, (void *)&qmap_settings);
             err = QmiThreadSendQMI(pRequest, &pResponse);
             qmi_rsp_check_and_return();
-            if (pResponse) free(pResponse);
+            qfree((void*)&pResponse);
         }
 
         // set ipv6
@@ -698,19 +698,19 @@ skip_WdaSetDataFormat:
         pRequest = ComposeQMUXMsg(QMUX_TYPE_WDS_IPV6, QMIWDS_SET_CLIENT_IP_FAMILY_PREF_REQ, WdsSetClientIPFamilyPref, (void *)&IpPreference);
         err = QmiThreadSendQMI(pRequest, &pResponse);
         qmi_rsp_check_and_return();
-        if (pResponse) free(pResponse);
+        qfree((void*)&pResponse);
     }
 
     pRequest = ComposeQMUXMsg(QMUX_TYPE_WDS, QMIWDS_SET_AUTO_CONNECT_REQ , WdsSetAutoConnect, (void *)&autoconnect_setting);
     QmiThreadSendQMI(pRequest, &pResponse);
-    if (pResponse) free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
 
 #ifdef CONFIG_SIM
 static int requestGetPINStatus(SIM_Status *pSIMStatus) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -737,12 +737,12 @@ static int requestGetPINStatus(SIM_Status *pSIMStatus) {
         }
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 int requestGetSIMStatus(SIM_Status *pSIMStatus) { //RIL_REQUEST_GET_SIM_STATUS
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -831,13 +831,13 @@ int requestGetSIMStatus(SIM_Status *pSIMStatus) { //RIL_REQUEST_GET_SIM_STATUS
     }
     log_info("%s SIMStatus: %s", __func__, SIM_Status_String[*pSIMStatus]);
 
-    free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
 
 int requestEnterSimPin(const char *pPinCode) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -849,13 +849,13 @@ int requestEnterSimPin(const char *pPinCode) {
     err = QmiThreadSendQMI(pRequest, &pResponse);
     qmi_rsp_check_and_return();
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 #ifdef CONFIG_IMSI_ICCID
-int requestGetICCID(void) { //RIL_REQUEST_GET_IMSI
-    PQCQMIMSG pRequest;
+int requestGetICCID(void*) { //RIL_REQUEST_GET_IMSI
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     PQMIUIM_CONTENT pUimContent;
@@ -885,12 +885,12 @@ int requestGetICCID(void) { //RIL_REQUEST_GET_IMSI
         log_info("%s DeviceICCID: %s", __func__, DeviceICCID);
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
-int requestGetIMSI(void) { //RIL_REQUEST_GET_IMSI
-    PQCQMIMSG pRequest;
+int requestGetIMSI(void*) { //RIL_REQUEST_GET_IMSI
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     PQMIUIM_CONTENT pUimContent;
@@ -919,7 +919,7 @@ int requestGetIMSI(void) { //RIL_REQUEST_GET_IMSI
         log_info("%s DeviceIMSI: %s", __func__, DeviceIMSI);
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 #endif
@@ -976,7 +976,7 @@ static void quectel_convert_cdma_mnc_2_ascii_mnc( ushort *p_mnc, ushort imsi_11_
 }
 
 static int requestGetHomeNetwork(ushort *p_mcc, ushort *p_mnc, ushort *p_sid, ushort *p_nid) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1001,8 +1001,7 @@ static int requestGetHomeNetwork(ushort *p_mcc, ushort *p_mnc, ushort *p_sid, us
         //log_info("%s SystemID: %d, NetworkID: %d", __func__, *pSystemID, *pNetworkID);
     }
 
-    free(pResponse);
-
+    qfree((void*)&pResponse);
     return 0;
 }
 #endif
@@ -1051,7 +1050,7 @@ static const char * MCC_CODES_HAVING_3DIGITS_MNC[] = {
 };
 
 int requestGetIMSI(const char **pp_imsi, ushort *pMobileCountryCode, ushort *pMobileNetworkCode) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1100,7 +1099,7 @@ int requestGetIMSI(const char **pp_imsi, ushort *pMobileCountryCode, ushort *pMo
         if (pMobileNetworkCode) *pMobileNetworkCode = atoi(tmp);
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
@@ -1135,7 +1134,7 @@ static char *wwan_data_class2str(uint class) {
 }
 
 static int requestRegistrationState2(uchar *pPSAttachedState) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1489,13 +1488,13 @@ static int requestRegistrationState2(uchar *pPSAttachedState) {
         log_info("%s MCC: %d, MNC: %d, PS: %s, DataCap: %s", __func__,
                  MobileCountryCode, MobileNetworkCode, (*pPSAttachedState == 1) ? "Attached" : "Detached" , pDataCapStr);
     }
-    free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
 
 int requestRegistrationState(uchar *pPSAttachedState) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1616,13 +1615,13 @@ int requestRegistrationState(uchar *pPSAttachedState) {
         log_info("%s MCC: %d, MNC: %d, PS: %s, DataCap: %s", __func__,
                  MobileCountryCode, MobileNetworkCode, (*pPSAttachedState == 1) ? "Attached" : "Detached" , pDataCapStr);
     }
-    free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
 
 int requestQueryDataCall(uchar  *pConnectionStatus, int curIpFamily) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1655,12 +1654,12 @@ int requestQueryDataCall(uchar  *pConnectionStatus, int curIpFamily) {
                      (*pConnectionStatus == QWDS_PKT_DATA_CONNECTED) ? "CONNECTED" : "DISCONNECTED");
         }
     }
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 int requestSetupDataCall(PROFILE_T *profile, int curIpFamily) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err = 0;
@@ -1680,19 +1679,19 @@ int requestSetupDataCall(PROFILE_T *profile, int curIpFamily) {
         log_info("%s WdsConnectionIPv6Handle: 0x%08x", __func__, WdsConnectionIPv6Handle);
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
 
     return 0;
 }
 
 int requestDeactivateDefaultPDP(PROFILE_T *profile, int curIpFamily) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
     uchar QMIType = (curIpFamily == 0x04) ? QMUX_TYPE_WDS : QMUX_TYPE_WDS_IPV6;
 
-    (void)profile;
+    profile = profile;
     if (curIpFamily == IpFamilyV4 && WdsConnectionIPv4Handle == 0)
         return 0;
     if (curIpFamily == IpFamilyV6 && WdsConnectionIPv6Handle == 0)
@@ -1706,12 +1705,12 @@ int requestDeactivateDefaultPDP(PROFILE_T *profile, int curIpFamily) {
         WdsConnectionIPv4Handle = 0;
     else
         WdsConnectionIPv6Handle = 0;
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 int requestGetIPAddress(PROFILE_T *profile, int curIpFamily) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1788,13 +1787,13 @@ int requestGetIPAddress(PROFILE_T *profile, int curIpFamily) {
         pIpv4->Mtu =  pIpv6->Mtu =  le32_to_cpu(pMtu->Mtu);
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 #ifdef CONFIG_APN
 int requestSetProfile(PROFILE_T *profile) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1807,12 +1806,12 @@ int requestSetProfile(PROFILE_T *profile) {
     err = QmiThreadSendQMI(pRequest, &pResponse);
     qmi_rsp_check_and_return();
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 
 int requestGetProfile(PROFILE_T *profile) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1858,14 +1857,14 @@ int requestGetProfile(PROFILE_T *profile) {
 
     log_info("%s[%d] %s/%s/%s/%d", __func__, profile->pdp, apn, user, password, auth);
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 #endif
 
 #ifdef CONFIG_VERSION
 int requestBaseBandVersion(const char **pp_reversion) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     PDEVICE_REV_ID revId;
@@ -1891,7 +1890,7 @@ int requestBaseBandVersion(const char **pp_reversion) {
         if (pp_reversion) *pp_reversion = DeviceRevisionID;
     }
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 #endif
@@ -1906,7 +1905,7 @@ static ushort DmsSetOperatingModeReq(PQMUX_MSG pMUXMsg, void *arg) {
 }
 
 int requestSetOperatingMode(uchar OperatingMode) {
-    PQCQMIMSG pRequest;
+    PQCQMIMSG pRequest = NULL;
     PQCQMIMSG pResponse;
     PQMUX_MSG pMUXMsg;
     int err;
@@ -1917,7 +1916,7 @@ int requestSetOperatingMode(uchar OperatingMode) {
     err = QmiThreadSendQMI(pRequest, &pResponse);
     qmi_rsp_check_and_return();
 
-    free(pResponse);
+    qfree((void*)&pResponse);
     return 0;
 }
 #endif
